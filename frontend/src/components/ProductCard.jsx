@@ -9,13 +9,42 @@ const GRADIENTS = [
     'gradient-6',
 ];
 
-const EMOJIS = ['🎧', '🖥️', '📱', '⌚', '🎮', '📷', '🔊', '💡', '🖨️', '⌨️'];
+// Keyword → emoji mapping, ordered from most specific to least specific
+const EMOJI_RULES = [
+    { keywords: ['headphone', 'earphone', 'earbud', 'audio'], emoji: '🎧' },
+    { keywords: ['keyboard'], emoji: '⌨️' },
+    { keywords: ['tv', 'television', 'smart tv', 'monitor'], emoji: '📺' },
+    { keywords: ['laptop', 'macbook', 'notebook', 'computer', 'pc'], emoji: '💻' },
+    { keywords: ['mobile', 'phone', 'smartphone', 'iphone'], emoji: '📱' },
+    { keywords: ['watch', 'smartwatch', 'wearable'], emoji: '⌚' },
+    { keywords: ['speaker', 'bluetooth speaker', 'soundbar'], emoji: '🔊' },
+    { keywords: ['camera', 'webcam', 'lens', 'dslr'], emoji: '📷' },
+    { keywords: ['shoe', 'sneaker', 'boot', 'sandal', 'running'], emoji: '👟' },
+    { keywords: ['shirt', 't-shirt', 'tshirt', 'tee', 'cotton', 'jacket', 'hoodie', 'pants', 'jeans', 'cloth', 'dress', 'wear', 'apparel'], emoji: '👕' },
+    { keywords: ['bottle', 'flask', 'tumbler', 'water', 'mug', 'cup'], emoji: '🍶' },
+    { keywords: ['candle', 'wax', 'scented', 'aroma'], emoji: '🕯️' },
+    { keywords: ['wallet', 'purse', 'bag', 'handbag', 'backpack'], emoji: '👜' },
+    { keywords: ['stand', 'mount', 'bracket', 'holder', 'desk'], emoji: '🖥️' },
+    { keywords: ['tablet', 'ipad'], emoji: '📟' },
+    { keywords: ['mouse'], emoji: '🖱️' },
+    { keywords: ['charger', 'cable', 'adapter', 'hub', 'usb'], emoji: '🔌' },
+    { keywords: ['game', 'gaming', 'gamepad', 'controller', 'joystick'], emoji: '🎮' },
+    { keywords: ['book', 'novel', 'magazine'], emoji: '📚' },
+    { keywords: ['pen', 'pencil', 'stationery'], emoji: '✏️' },
+];
+
+function getEmoji(name = '') {
+    const lower = name.toLowerCase();
+    for (const rule of EMOJI_RULES) {
+        if (rule.keywords.some((kw) => lower.includes(kw))) {
+            return rule.emoji;
+        }
+    }
+    return '🛍️'; // generic fallback
+}
 
 function getGradient(id) {
     return GRADIENTS[(id - 1) % GRADIENTS.length];
-}
-function getEmoji(id) {
-    return EMOJIS[(id - 1) % EMOJIS.length];
 }
 
 function ProductCard({ product, onAddToCart, onDelete, isAdmin, loading }) {
@@ -36,7 +65,7 @@ function ProductCard({ product, onAddToCart, onDelete, isAdmin, loading }) {
 
     const { id, name, description, price } = product;
     const gradientClass = getGradient(id);
-    const emoji = getEmoji(id);
+    const emoji = getEmoji(name);
     const isNew = id % 4 === 0;
     const isHot = id % 5 === 1;
 
